@@ -12,7 +12,7 @@ resource "google_compute_instance_template" "web_template" {
     network = "default"
     access_config {}
   }
-  zone = "asia-south1-a" 
+  # REMOVED: zone = "asia-south1-a" - Instance templates don't use zone parameter
 
   metadata_startup_script = <<-EOF
     #!/bin/bash
@@ -23,10 +23,15 @@ resource "google_compute_instance_template" "web_template" {
     ansible-playbook -i "localhost," -c local playbook.yml
   EOF
 
-  # ADD THIS: Define named port for load balancer
+  # Define named port for load balancer
   named_port {
     name = "http"
     port = 80
+  }
+
+  # Lifecycle policy for safe template updates
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -34,7 +39,7 @@ resource "google_compute_instance_template" "web_template" {
 resource "google_compute_instance_group_manager" "web_mig" {
   name               = "web-mig-manager"
   base_instance_name = "web-instance"
-  zone               = "asia-south1-a"
+  zone               = "asia-south1-a"  # Zone specified here, not in template
   target_size        = 2
 
   version {
@@ -51,4 +56,3 @@ resource "google_compute_instance_group_manager" "web_mig" {
     port = 80
   }
 }
-
