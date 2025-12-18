@@ -15,7 +15,7 @@ resource "google_compute_instance_template" "web_template" {
 
   metadata_startup_script = <<-EOF
     #!/bin/bash
-    sudo apt update
+    sudo apt update -y
     sudo apt install -y ansible git
     git clone https://github.com/pavandath/ansible.git /tmp/config
     cd /tmp/config/ansible
