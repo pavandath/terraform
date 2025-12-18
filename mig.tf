@@ -22,7 +22,7 @@ resource "google_compute_instance_template" "web_template" {
     sudo apt update -y
     sudo apt install -y ansible git
     git clone https://github.com/pavandath/ansible.git /tmp/config
-    cd /tmp/config/ansible
+    cd /tmp/config
     ansible-playbook -i "localhost," -c local playbook.yml
   EOF
 
