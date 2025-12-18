@@ -1,3 +1,7 @@
+provider "google" {
+  project = siva-477505
+  
+}
 # Instance Template with named_port
 resource "google_compute_instance_template" "web_template" {
   name_prefix = "web-template-"
