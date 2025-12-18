@@ -1,5 +1,5 @@
 provider "google" {
-  project = siva-477505
+  project = "siva-477505"
   
 }
 # Instance Template with named_port
