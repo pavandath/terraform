@@ -16,14 +16,20 @@ resource "google_compute_instance_template" "web_template" {
     network = "default"
     access_config {}
   }
-
   metadata_startup_script = <<-EOF
-    #!/bin/bash
-    sudo apt update -y
-    sudo apt install -y ansible git
-    git clone https://github.com/pavandath/ansible.git /tmp/config
-    cd /tmp/config
-    ansible-playbook -i "localhost," -c local playbook.yml
+  #!/bin/bash
+  
+  # Install Ansible and git (if not already present)
+  sudo apt update -y
+  sudo apt install -y ansible git
+  
+  # Clone the repository and run ansible-pull on a schedule
+  sudo crontab -l 2>/dev/null > /tmp/cronjob || true
+  echo "*/30 * * * * cd /tmp && ansible-pull -U https://github.com/pavandath/ansible.git -C main -d /tmp/ansible-pull --purge" >> /tmp/cronjob
+  sudo crontab /tmp/cronjob
+  
+  # Run it immediately for the first time
+  cd /tmp && ansible-pull -U https://github.com/pavandath/ansible.git -C main -d /tmp/ansible-pull --purge
   EOF
 
   lifecycle {
