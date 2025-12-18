@@ -4,12 +4,6 @@ resource "google_compute_instance_template" "web_template" {
   machine_type = "e2-micro"
   tags = ["http-server"]
 
-  # named_port should be a top-level argument (not inside any block)
-  named_port {
-    name = "http"
-    port = 80
-  }
-
   disk {
     source_image = "ubuntu-os-cloud/ubuntu-2204-lts"
   }
